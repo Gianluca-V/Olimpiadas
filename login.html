@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="page">
+    <h1 class="page__title">Login Page</h1>
+    <form class="form" id="login-form">
+        <label class="form__label" for="username">Username:</label>
+        <input class="form__input" type="text" id="username" name="username" required><br>
+
+        <label class="form__label" for="password">Password:</label>
+        <input class="form__input" type="password" id="password" name="password" required><br>
+
+        <input class="form__submit" type="submit" value="Login">
+    </form>
+
+    <p class="message" id="login-message"></p>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginMessage = document.getElementById('login-message');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Make a request to your API to check credentials
+            try {
+                const response = await fetch('http://localhost/olimpiadasServer/api/users/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.status === 200) {
+                    // Successful login
+                    loginMessage.textContent = 'Login successful. Redirecting...';
+
+                    // Redirect to the admin/user dashboard or another page
+                    // You can use window.location.href for redirection
+                } else {
+                    // Authentication failed
+                    loginMessage.textContent = 'Authentication failed. Please try again.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                loginMessage.textContent = 'An error occurred. Please try again later.';
+            }
+        });
+    </script>
+</body>
+</html>
