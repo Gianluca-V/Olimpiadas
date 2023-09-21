@@ -10,9 +10,15 @@ switch ($request_method) {
         }
         break;
     case 'POST':
-        // Create a new User
+        // Create a new User or Check User for login
         $data = json_decode(file_get_contents("php://input"));
-        createUser($data);
+        if (isset($data->login) && $data->login === true) {
+            // Login check
+            checkUserForLogin($data);
+        } else {
+            // Create a new User
+            createUser($data);
+        }
         break;
     case 'PUT':
         // Update a User by ID
@@ -68,10 +74,16 @@ function createUser($data)
     global $conn;
     // Assuming $data contains the necessary fields for creating a User
     $UserName = $conn->real_escape_string($data->UserName);
-    $Password = floatval($data->Password);
+    $rawPassword = $data->Password;
+    
+    // Generate a random salt for each user
+    $salt = bin2hex(random_bytes(16));
+    
+    // Combine the raw password and salt, and then hash it with SHA-256
+    $hashedPassword = hash('sha256', $salt . $rawPassword);
 
-    $sql = "INSERT INTO Users (UserName, Password) 
-            VALUES ('$UserName', '$Password')";
+    $sql = "INSERT INTO Users (UserName, Password, Salt) 
+            VALUES ('$UserName', '$hashedPassword', '$salt')";
 
     if ($conn->query($sql) === TRUE) {
         echo json_encode(array("message" => "User created successfully"));
@@ -88,14 +100,13 @@ function updateUser($User_id, $data)
     $UserName = $conn->real_escape_string($data->UserName);
     $Password = floatval($data->Password);
 
-    $sql = "INSERT INTO Users (UserName, Password) 
-            VALUES ('$UserName', '$Password') WHERE ID = $id";
+    $sql = "UPDATE Users SET UserName='$UserName', Password='$Password' WHERE ID = $id";
 
     if ($conn->query($sql) === TRUE) {
         echo json_encode(array("message" => "User updated successfully"));
     } else {
         http_response_code(500);
-        echo json_encode(array("message" => "Error creating User: " . $conn->error));
+        echo json_encode(array("message" => "Error updating User: " . $conn->error));
     }
 }
 
@@ -110,6 +121,36 @@ function deleteUser($User_id)
     } else {
         http_response_code(500);
         echo json_encode(array("message" => "Error deleting User: " . $conn->error));
+    }
+}
+
+function checkUserForLogin($data)
+{
+    global $conn;
+    $UserName = $conn->real_escape_string($data->UserName);
+    $rawPassword = $data->Password;
+
+    $sql = "SELECT * FROM Users WHERE UserName = '$UserName'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $hashedPassword = $row['Password'];
+        $salt = $row['Salt'];
+        
+        // Combine the entered password with the stored salt and hash it
+        $enteredPasswordHash = hash('sha256', $salt . $rawPassword);
+        
+        // Compare the entered password hash with the stored hash
+        if ($enteredPasswordHash === $hashedPassword) {
+            echo json_encode(array("message" => "Login successful"));
+        } else {
+            http_response_code(401);
+            echo json_encode(array("message" => "Login failed"));
+        }
+    } else {
+        http_response_code(401);
+        echo json_encode(array("message" => "Login failed"));
     }
 }
 ?>
