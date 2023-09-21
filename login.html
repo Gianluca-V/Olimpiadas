@@ -13,10 +13,10 @@
     <h1 class="page__title">Login Page</h1>
     <form class="form" id="login-form">
         <label class="form__label" for="username">Username:</label>
-        <input class="form__input" type="text" id="username" name="username" required><br>
+        <input class="form__input" type="text" id="username" name="username" required>
 
         <label class="form__label" for="password">Password:</label>
-        <input class="form__input" type="password" id="password" name="password" required><br>
+        <input class="form__input" type="password" id="password" name="password" required>
 
         <input class="form__submit" type="submit" value="Login">
     </form>
@@ -40,9 +40,10 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username, password }),
+                    body: JSON.stringify({ "UserName":username, "Password":password,"login":true }),
                 });
 
+                console.log(JSON.stringify({ "UserName":username, "Password":password,"login":true }))
                 const data = await response.json();
 
                 if (response.status === 200) {
