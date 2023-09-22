@@ -3,7 +3,8 @@
     padding: 0;
     box-sizing: border-box;
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Poppins', sans-serif;
+
 }
 
 .header {
@@ -32,7 +33,7 @@
 }
 
 .hero {
-    background-image: url('assets/hospital-img.jpg');
+    background-image: url('assets/hospital--img.jpg');
     background-size: cover;
     min-height: 500px;
     color: #000;
@@ -162,4 +163,18 @@
 
 .footer__copyright {
     font-size: 14px;
+}
+
+.menu__link:hover,
+.menu__link:active {
+    color: cornflowerblue; /* Cambia el color al pasar el mouse o cuando está activo */
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.hero__title {
+    animation: fadeIn 1s ease-in-out; /* Aplicar la animación */
 }
