@@ -43,7 +43,6 @@
                     body: JSON.stringify({ "UserName":username, "Password":password,"login":true }),
                 });
 
-                console.log(JSON.stringify({ "UserName":username, "Password":password,"login":true }))
                 const data = await response.json();
 
                 if (response.status === 200) {
