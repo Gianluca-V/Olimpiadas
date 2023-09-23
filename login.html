@@ -48,7 +48,7 @@
                 if (response.status === 200) {
                     // Successful login
                     loginMessage.textContent = 'Login successful. Redirecting...';
-                    
+                    window.location.href = "admin.html";
                 } else {
                     // Authentication failed
                     loginMessage.textContent = 'Authentication failed. Please try again.';
