@@ -181,6 +181,11 @@
 
 .areas{
     width: 100%;
+    text-align: center;
+}
+.areas__title{
+    font-size: 3rem;
+    font-weight: 700;
 }
 
 .areas__container{
@@ -246,4 +251,68 @@
 .areas__delete svg{
     fill:red;
     cursor: pointer;
+}
+
+.separator{
+    width: 90%;
+    height: 3px;
+    background-color: black;
+    margin: auto;
+    margin-block: 3rem;
+}
+
+.patients{
+    text-align: center;
+}
+.patients__title{
+    font-size: 3rem;
+    font-weight: 700;
+}
+.patients__container{
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 90%;
+    padding: 1rem;
+    gap:3rem;
+}
+.patients__patient{
+    cursor: pointer;
+    transition: color 0.125s linear;
+}
+.patients__patient:hover{
+    color:blue;
+}
+
+
+.users{
+    text-align: center;
+}
+.users__title{
+    font-size: 3rem;
+    font-weight: 700;
+}
+.users__container{
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 90%;
+    padding: 1rem;
+    gap:3rem;
+}
+.users__user{
+    cursor: pointer;
+    transition: color 0.125s linear;
+}
+.users__user:hover{
+    color:blue;
+}
+
+
+.calls{
+    text-align: center;
+}
+.calls__title{
+    font-size: 3rem;
+    font-weight: 700;
 }
