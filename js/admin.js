@@ -129,7 +129,43 @@ async function fetchUsers() {
     }
 }
 
+//calls section
+
+function createCallElement(call) {
+    const callElement = document.createElement('div');
+    callElement.classList.add('calls__call');
+    callElement.innerHTML = `
+        <div class="call__id">ID: ${call.ID}</div>
+        <div class="call__type">Type: <span class="call__type-span" ${call.Type == "Emergency"? "style='color:red;'" : ""}>${call.Type}</span> </div>
+        <div class="call__response">Response Time: ${call.ResponseTime}s</div>
+        <div class="call__attended">Attended: ${call.Attended == 0? "No" : "Yes"}</div>
+    `;
+    return callElement;
+}
+
+function populateCalls(calls) {
+    const callsContainer = document.querySelector('.calls__container');
+
+    calls.forEach((call) => {
+        const callElement = createCallElement(call);
+        callsContainer.appendChild(callElement);
+    });
+}
+
+async function fetchCalls() {
+    try {
+        const response = await fetch('http://localhost/olimpiadasServer/api/calls/');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const calls = await response.json();
+        populateCalls(calls);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
 // Call the function to fetch areas and nurses data and populate the UI when the page loads
 window.addEventListener('load', ()=>{
-    Promise.all([fetchAreasAndNurses(),fetchPatients(),fetchUsers()]);
+    Promise.all([fetchAreasAndNurses(),fetchPatients(),fetchUsers(),fetchCalls()]);
 });

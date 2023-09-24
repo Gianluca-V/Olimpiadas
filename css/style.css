@@ -316,3 +316,18 @@
     font-size: 3rem;
     font-weight: 700;
 }
+
+.calls__container{
+    padding: 3rem;
+    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, min(20rem, 80vw));
+    gap: 2rem;
+    justify-content: center;
+    margin: auto;
+}
+
+.calls__call{
+    border: 1px black solid;
+    border-radius: 8px;
+}
