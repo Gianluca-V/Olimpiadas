@@ -17,12 +17,12 @@ switch ($request_method) {
     case 'PUT':
         // Update a Nurse by ID
         $data = json_decode(file_get_contents("php://input"));
-        $Nurse_id = intval($_GET['id']);
+        $Nurse_id = intval($parts[4]);
         updateNurse($Nurse_id, $data);
         break;
     case 'DELETE':
         // Delete a Nurse by ID
-        $Nurse_id = intval($_GET['id']);
+        $Nurse_id = intval($parts[4]);
         deleteNurse($Nurse_id);
         break;
     default:
@@ -68,13 +68,14 @@ function createNurse($data)
     global $conn;
     // Assuming $data contains the necessary fields for creating a Nurse
     $FirstName = $conn->real_escape_string($data->FirstName);
-    $LastName = floatval($data->LastName);
+    $LastName = $conn->real_escape_string($data->LastName);
     $DNI	 = intval($data->DNI);
     $Phone = $conn->real_escape_string($data->Phone);
     $Address = $conn->real_escape_string($data->Address);
+    $Area = intval($data->area);
 
-    $sql = "INSERT INTO Nurses (FirstName, LastName, DNI, Phone, Address) 
-            VALUES ('$FirstName', $LastName, $DNI, '$Phone', '$Address')";
+    $sql = "INSERT INTO Nurses (FirstName, LastName, DNI, Phone, Address, area) 
+            VALUES ('$FirstName', '$LastName', $DNI, '$Phone', '$Address', $Area)";
 
     if ($conn->query($sql) === TRUE) {
         echo json_encode(array("message" => "Nurse created successfully"));
@@ -89,7 +90,7 @@ function updateNurse($Nurse_id, $data)
     global $conn;
     $id = intval($Nurse_id);
     $FirstName = $conn->real_escape_string($data->FirstName);
-    $LastName = floatval($data->LastName);
+    $LastName = $conn->real_escape_string($data->LastName);
     $DNI = intval($data->DNI);
     $Phone = $conn->real_escape_string($data->Phone);
     $Address = $conn->real_escape_string($data->Address);

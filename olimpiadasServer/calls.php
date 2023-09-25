@@ -17,12 +17,12 @@ switch ($request_method) {
     case 'PUT':
         // Update a Call by ID
         $data = json_decode(file_get_contents("php://input"));
-        $Call_id = intval($_GET['id']);
+        $Call_id = intval($parts[4]);
         updateCall($Call_id, $data);
         break;
     case 'DELETE':
         // Delete a Call by ID
-        $Call_id = intval($_GET['id']);
+        $Call_id = intval($parts[4]);
         deleteCall($Call_id);
         break;
     default:

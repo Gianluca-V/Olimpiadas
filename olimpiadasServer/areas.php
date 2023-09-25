@@ -2,10 +2,14 @@
 switch ($request_method) {
     case 'GET':
         // Get all Areas or a specific Area by ID
-        if ($parts[4] !== "") {
+        if($parts[4] === "-v"){
+            getAreasWithNurses();
+        }
+        else if ($parts[4] !== "") {
             $Areas_id = intval($parts[4]);
             getArea($Areas_id);
-        } else {
+        }
+        else {
             getAreas();
         }
         break;
@@ -17,12 +21,12 @@ switch ($request_method) {
     case 'PUT':
         // Update a Area by ID
         $data = json_decode(file_get_contents("php://input"));
-        $Area_id = intval($_GET['id']);
+        $Area_id = intval($parts[4]);
         updateArea($Area_id, $data);
         break;
     case 'DELETE':
         // Delete a Area by ID
-        $Area_id = intval($_GET['id']);
+        $Area_id = intval($parts[4]);
         deleteArea($Area_id);
         break;
     default:
@@ -108,6 +112,62 @@ function deleteArea($Area_id)
     } else {
         http_response_code(500);
         echo json_encode(array("message" => "Error deleting Area: " . $conn->error));
+    }
+}
+
+function getAreasWithNurses()
+{
+    global $conn;
+    
+    $sql = "SELECT
+                areas.Name AS AreaName,
+                nurses.FirstName AS NurseFirstName,
+                nurses.LastName AS NurseLastName
+            FROM
+                Areas
+            LEFT JOIN
+                Patients ON areas.ID = patients.Location
+            LEFT JOIN
+                Nurses ON patients.Nurse = nurses.ID
+            ORDER BY
+                areas.Name, nurses.FirstName, nurses.LastName";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $areasData = array();
+        $currentArea = null;
+
+        while ($row = $result->fetch_assoc()) {
+            $areaName = $row['AreaName'];
+            $nurseFirstName = $row['NurseFirstName'];
+            $nurseLastName = $row['NurseLastName'];
+
+            if ($currentArea === null || $currentArea['areaName'] !== $areaName) {
+                if ($currentArea !== null) {
+                    $areasData[] = $currentArea;
+                }
+
+                $currentArea = array(
+                    'areaName' => $areaName,
+                    'nurses' => array(),
+                );
+            }
+
+            if ($nurseFirstName !== null && $nurseLastName !== null) {
+                $currentArea['nurses'][] = array(
+                    'name' => $nurseFirstName . ' ' . $nurseLastName,
+                );
+            }
+        }
+
+        if ($currentArea !== null) {
+            $areasData[] = $currentArea;
+        }
+
+        echo json_encode($areasData);
+    } else {
+        echo json_encode(array());
     }
 }
 

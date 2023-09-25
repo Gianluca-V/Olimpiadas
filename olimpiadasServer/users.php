@@ -23,12 +23,12 @@ switch ($request_method) {
     case 'PUT':
         // Update a User by ID
         $data = json_decode(file_get_contents("php://input"));
-        $User_id = intval($_GET['id']);
+        $User_id = intval($parts[4]);
         updateUser($User_id, $data);
         break;
     case 'DELETE':
         // Delete a User by ID
-        $User_id = intval($_GET['id']);
+        $User_id = intval($parts[4]);
         deleteUser($User_id);
         break;
     default:

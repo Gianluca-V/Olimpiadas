@@ -331,3 +331,16 @@
     border: 1px black solid;
     border-radius: 8px;
 }
+
+.users__add,.patients__add,.calls__add{
+    width: 100%;
+    max-width: 250px;
+    font-size: 2rem;
+    background-color: aquamarine;
+    order: 2;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

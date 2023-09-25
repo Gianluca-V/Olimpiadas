@@ -17,12 +17,12 @@ switch ($request_method) {
     case 'PUT':
         // Update a Patient by ID
         $data = json_decode(file_get_contents("php://input"));
-        $patient_id = intval($_GET['id']);
+        $patient_id = intval($parts[4]);
         updatePatient($patient_id, $data);
         break;
     case 'DELETE':
         // Delete a Patient by ID
-        $patient_id = intval($_GET['id']);
+        $patient_id = intval($parts[4]);
         deletePatient($patient_id);
         break;
     default:
@@ -68,7 +68,7 @@ function createPatient($data)
     global $conn;
     // Assuming $data contains the necessary fields for creating a Patient
     $FirstName = $conn->real_escape_string($data->FirstName);
-    $LastName = floatval($data->LastName);
+    $LastName = $conn->real_escape_string($data->LastName);
     $DNI	 = intval($data->DNI);
     $Phone = $conn->real_escape_string($data->Phone);
     $Address = $conn->real_escape_string($data->Address);
@@ -92,7 +92,7 @@ function updatePatient($patient_id, $data)
     global $conn;
     $id = intval($patient_id);
     $FirstName = $conn->real_escape_string($data->FirstName);
-    $LastName = floatval($data->LastName);
+    $LastName = $conn->real_escape_string($data->LastName);
     $DNI	 = intval($data->DNI);
     $Phone = $conn->real_escape_string($data->Phone);
     $Address = $conn->real_escape_string($data->Address);

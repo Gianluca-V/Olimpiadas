@@ -26,13 +26,13 @@
     <script>
         const loginForm = document.getElementById('login-form');
         const loginMessage = document.getElementById('login-message');
-
+    
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
+    
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
+    
             // Make a request to your API to check credentials
             try {
                 const response = await fetch('http://localhost/olimpiadasServer/api/users/', {
@@ -40,14 +40,18 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "UserName":username, "Password":password,"login":true }),
+                    body: JSON.stringify({ "UserName": username, "Password": password, "login": true }),
                 });
-
+    
                 const data = await response.json();
-
+    
                 if (response.status === 200) {
                     // Successful login
                     loginMessage.textContent = 'Login successful. Redirecting...';
+    
+                    // Save 'logged: true' in local storage
+                    localStorage.setItem('logged', 'true');
+    
                     window.location.href = "admin.html";
                 } else {
                     // Authentication failed
